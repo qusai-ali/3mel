@@ -28,7 +28,7 @@
                 </div>
                 <div class="group">
                     <label>صورة المدينة: <span class="require">*</span></label>
-                    <input type="file" name="img" accept="image/*" id="image" required>
+                    <input type="file" name="img[]" accept="image/*" multiple required id="city_image">
                     @if ($errors->has('img'))
                     <span class="text-danger">{{ $errors->first('img') }}</span>
                     @endif

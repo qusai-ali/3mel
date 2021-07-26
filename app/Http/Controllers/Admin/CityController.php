@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Category;
 use Image;
 use App\City;
+use App\CityImage;
+
 
 
 class CityController extends Controller
@@ -20,18 +22,21 @@ class CityController extends Controller
         
     }
 
-    // Show all Cities
-    public function admin() {
-    $cities = City::orderBy('id','DESC')->paginate(15);
-    return view('dashboard.city.city',compact('cities'));
-     }
+      // Show all Cities
+     public function admin() {
+      $cities = City::orderBy('id','DESC')->paginate(15);
+      return view('dashboard.city.city',compact('cities'));
+      }
 
-    // Go to add new city page
+       // Go to add new city page
 
      public function create() {
       $Cities = City::all();
       return view('dashboard.city.city-add',compact('Cities'));
       }
+
+
+      
      public function store(request $request){
       $city=new City;
       $last_cit = City::latest('id')->first();
@@ -58,27 +63,81 @@ class CityController extends Controller
              ],
            'en' => ['name' =>$city_name_en,]
              ];
+
       
-      if($request->file('img')){
-            $image=$request->file('img');
+      $city = City::create($data);
+             if($request->file('img')){
+              $path = 'images/city/'.$city->id.'/';
+              if(!(\File::exists($path))){
+                  \File::makeDirectory($path);
+              } 
+              $files=$request->file('img');
 
-            $input['img'] = $image->getClientOriginalName();
-            $path = 'images/city/';
-            $destinationPath = 'images/city';
-            // $destinationPath = '/images/city';
-            $img = Image::make($image->getRealPath());
-            $img->resize(500, 500, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.'/'.time().$input['img']);
-            $name = $path.time().$input['img'];
+              foreach($files as $file) {
+                  $input['img'] = $file->getClientOriginalName();
+                  $destinationPath = 'images/city/';
+                  $img = Image::make($file->getRealPath());
+                  $img->resize(800, 750, function ($constraint) {
+                      $constraint->aspectRatio();
+                  })->save($path.$input['img']);
+                  $name = $path.$input['img'];
+                  CityImage::insert( [
+                      'img'=>  $name,
+                      'City_id'=> $city->id
+                  ]);
+              }
+          }
+        //dd($data);########################
 
-         $data['image'] =  $name;
-       }
-        //dd($data);
-      $city->create($data);
+     return redirect('/admin/cities')->with('message','تم إضافة مدينة جديدة بنجاح');
 
-      return redirect('/admin/cities')->with('message','تم إضافة مدينة جديدة بنجاح');
+     }
+     public function destroy($id) {
+      $city = City::where('id',$id)->first();
+        if(\File::exists($city->img)){
+              \File::delete($city->img);
+              \File::delete($city->name);
+           }
+     $city->delete();
+     return redirect('/admin/cities')->with('message','تم حذف المدينة بنجاح');
+ }
 
-    }
+ //##############city edit########
+ public function edit($id) {
+  $city = City::where('id',$id)->first();
+  return view('dashboard.city.city-edit',compact('city'));
+}
+
+public function update(Request $request, $id) {
+  
+  $city = City::where('id',$id)->first();
+  $city_name=$request->city_name;
+  $city_name_en=$request->city_name_en;
+  $data = [
+    'ar' => [
+        'name' => $city_name,
+      ],
+    'en' => ['name' =>$city_name_en,]
+      ];
+  if($request->file('img')){
+    $image=$request->file('img');
+
+    $input['img'] = $image->getClientOriginalName();
+    $path = 'images/city/';
+    $destinationPath = 'images/city';
+    // $destinationPath = '/images/city';
+    $img = Image::make($image->getRealPath());
+    $img->resize(500, 500, function ($constraint) {
+        $constraint->aspectRatio();
+    })->save($destinationPath.'/'.time().$input['img']);
+    $name = $path.time().$input['img'];
+
+ $data['image'] =  $name;
+}
+  $city->update($data);
+
+  return redirect()->back()->with('message','تم تعديل بيانات العلامة التجارية بنجاح');
+}
+
 
 }

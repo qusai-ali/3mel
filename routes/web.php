@@ -68,6 +68,11 @@ Route::namespace("Admin")->prefix('admin')->group(function(){
      Route::get('/cities','CityController@admin');
      Route::get('/city/add','CityController@create');
      Route::post('/city/store','CityController@store')->name('admin.city.store');
+    Route::delete('/city/delete/{id}','CityController@destroy');
+    Route::get('/city/edit/{id}','CityController@edit');
+    Route::post('/city/update/{id}','CityController@update')->name('admin.city.update');
+
+
 
 
      

@@ -120,8 +120,7 @@ class ItemController extends Controller
             } 
             $files=$request->file('img');
             foreach($files as $file) {
-              
-
+ 
                 $input['img'] = $file->getClientOriginalName();
                 $destinationPath = 'images/items/';
                 

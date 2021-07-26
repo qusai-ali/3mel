@@ -1,6 +1,8 @@
 <?php
 
 namespace App;
+use App\CityImage;
+
 
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -10,6 +12,10 @@ class City extends Model
 {
     use Translatable;
     protected $table = 'cities';
-    protected $fillable = ['image'];
+    protected $fillable = ['images'];
     public $translatedAttributes = ['name'];
+
+    public function images(){
+        return $this->hasMany('App\CityImage');
+    }
 }

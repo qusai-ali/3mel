@@ -8,9 +8,9 @@
             <div class="col-12">
                 <h2 class="main-title">
                     التصنيفات:
-                    <a href="{{ url('admin/category/add') }}">
+                    <a href="{{ url('admin/city/add') }}">
                         <i class="fas fa-plus"></i>
-                        إضافة تصنيف جديد
+                        إضافة مدينة جديدة
                     </a>
                 </h2>
             </div>
@@ -33,12 +33,7 @@
                             </button>
                         </li>
                         @endif
-                        <li>
-                            <a href="{{ url('/admin/city/item/'.$city->id) }}">
-                                <i class="far fa-eye"></i>
-                                <span class="hint">عرض منتجات هذا التصنيف</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
