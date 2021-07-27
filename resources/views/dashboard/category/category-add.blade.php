@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-md-12 mb-2">
                     <div>
-                        <label for="exampleInputFile">عرض الصورة</label>
+                        <label for="exampleInputFile">عرض الصور</label>
                         <div class="input-group">
                             <img src="{{ asset('/images/image-preview.jpg') }}" class="img-fluid small-img"
                                 id="image_preview_container">

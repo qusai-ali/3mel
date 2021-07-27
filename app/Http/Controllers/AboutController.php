@@ -18,7 +18,5 @@ class AboutController extends Controller
         return view('front_views.about',compact('about','categories'));
     }
 
-    public function khbjh(){}
-
     
 }

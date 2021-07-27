@@ -7,42 +7,38 @@
 
             <div class="col-12">
                 <h2 class="main-title">
-                    التصنيفات:
-                    <a href="{{ url('admin/category/add') }}">
+                    المدن:
+                    <a href="{{ url('admin/city/add') }}">
                         <i class="fas fa-plus"></i>
-                        إضافة تصنيف جديد
+                        إضافة مدينة جديدة
                     </a>
                 </h2>
             </div>
 
             @foreach ($cities as $city)
-            <div class="col-md-4 col-sm-6 col-12">
-                <div class="guide-block">
-                    <img src="{{ asset($city->img) }}" class="img-fluid">
-                    <h3>{{ $city->translate('ar')->name }}</h3>
-                    <ul>
-                        @if($city->id != 4)
-                        <li>
-                            <a href="{{ url('/admin/city/edit/'.$city->id) }}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a> 
-                        </li>
-                        <li>
-                            <button data-toggle="modal" data-target="{{'#exampleModal'.$city->id }}">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </li>
-                        @endif
-                        <li>
-                            <a href="{{ url('/admin/city/item/'.$city->id) }}">
-                                <i class="far fa-eye"></i>
-                                <span class="hint">عرض منتجات هذا التصنيف</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            @endforeach
+				<div class="col-md-4 col-sm-6 col-12">
+					<div class="guide-block">
+					@foreach($city->images as $image)
+					@if($city->images->first()==$image)
+						<img src="{{ asset($image->img) }}" class="img-fluid">
+						@endif
+						@endforeach
+						<h3>{{ $city->translate('ar')->name }}</h3>
+						<ul>
+							<li>
+								<a href="{{ url('admin/city/edit/'.$city->id) }}">
+									<i class="fas fa-pencil-alt"></i>
+								</a> 
+							</li>
+							<li>
+								<button data-toggle="modal" data-target="{{'#exampleModal'.$city->id }}">
+									<i class="fas fa-trash-alt"></i>
+								</button>
+							</li>
+						</ul>
+					</div>
+				</div>
+				@endforeach
 
             <div class="col-12">
                 {{ $cities->links() }}
@@ -58,7 +54,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">حذف تصنيف</h5>
+                <h5 class="modal-title">حذف مدينة</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>

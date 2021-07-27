@@ -19,11 +19,11 @@
                     <span class="text-danger">{{ $errors->first('city_name') }}</span>
                     @endif
                 </div>
-                <div class="group">
-                    <label>اسم المدينة (انكليزي): <span class="require">*</span></label>
+				<div class="group">
+                    <label>اسم المدينة (انكليزي) <span class="require">*</span></label>
                     <input type="text" name="city_name_en" required>
                     @if ($errors->has('city_name'))
-                    <span class="text-danger">{{ $errors->first('city_name') }}</span>
+                    <span class="text-danger">{{ $errors->first('city_name_en') }}</span>
                     @endif
                 </div>
                 <div class="group">
@@ -35,13 +35,14 @@
                 </div>
                 <div class="col-md-12 mb-2">
                     <div>
-                        <label for="exampleInputFile">عرض الصورة</label>
+                        <label for="exampleInputFile">عرض الصور</label>
                         <div class="input-group">
                             <img src="{{ asset('/images/image-preview.jpg') }}" class="img-fluid small-img"
                                 id="image_preview_container">
                         </div>
                     </div>
                 </div>
+
                 <div class="group">
                     <button type="submit">إضافة</button>
                 </div>
