@@ -71,6 +71,11 @@ Route::namespace("Admin")->prefix('admin')->group(function(){
     Route::delete('/city/delete/{id}','CityController@destroy');
     Route::get('/city/edit/{id}','CityController@edit');
     Route::post('/city/update/{id}','CityController@update')->name('admin.city.update');
+<<<<<<< Updated upstream
+=======
+    Route::delete('/city/img/delete/{id}','CityController@imagedelete');
+
+>>>>>>> Stashed changes
 
 
 
