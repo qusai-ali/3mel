@@ -99,7 +99,7 @@
 							<a class="nav-link" href="{{ url('/admin/items') }}">
 								<i class="fas fa-box"></i>
 								<span class="link">
-									المنتجات
+									المعالم
 								</span>
 							</a>
 							<ul>
@@ -107,7 +107,7 @@
 									<a href="{{ url('/admin/item/add') }}">
 										<i class="fas fa-plus"></i>
 										<span class="link">
-											إضافة منتج جديد
+											إضافة مكان جديد
 										</span>
 									</a> 
 								</li>

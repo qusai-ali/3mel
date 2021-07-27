@@ -7,6 +7,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use App\Category;
 use App\ItemImage;
+use App\City;
 
 class Item extends Model
 {
@@ -17,6 +18,10 @@ class Item extends Model
 
     public function categories(){
         return $this->belongsToMany('App\Category');
+    }
+
+    public function cities(){
+        return $this->belongsToMany('App\City');
     }
 
     public function images(){

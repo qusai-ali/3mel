@@ -9,6 +9,7 @@ use App\Item;
 use App\ItemImage;
 use App\Category;
 use App\CategoryItem;
+use App\City;
 use Image;
 
 class ItemController extends Controller
@@ -28,72 +29,57 @@ class ItemController extends Controller
     // Go to add new item page
     public function create() {
         $categories = Category::all();
-        return view('dashboard.item.item-add',compact('categories'));
+        $cities = City::all();
+        return view('dashboard.item.item-add',compact('categories','cities'));
     }
     
     // Add new item
     public function store(Request $request) {
 
         $request->validate([
-            'item_title' => 'required',
-            'item_desc' => 'required',
-            'item_count' => 'min:0',
-            'item_price' => 'min:0',
-            'item_price_new' => 'min:0',
-            'item_price_real' => 'min:0',
+            'item_title_ar' => 'required',
+            'item_title_en' => 'required',
+            'item_desc_ar' => 'required',
+            'item_desc_en' => 'required',
+            'item_address_ar' => 'required',
+            'item_address_en' => 'required',
+            'item_phone' => 'required',
+            'item_city' => 'required',
             'img' => 'required',
             'category' => 'required',
-            // 'img.*' => 'image|max:2000'
         ],
         [
-            'category_title.required' => 'هذا الحقل مطلوب',
+            'item_title_ar.required' => 'هذا الحقل مطلوب',
+            'item_title_en.required' => 'هذا الحقل مطلوب',
+            'item_desc_ar.required' => 'هذا الحقل مطلوب',
+            'item_desc_en.required' => 'هذا الحقل مطلوب',
+            'item_address_ar.required' => 'هذا الحقل مطلوب',
+            'item_address_en.required' => 'هذا الحقل مطلوب',
+            'item_phone.required' => 'هذا الحقل مطلوب',
+            'item_city.required' => 'هذا الحقل مطلوب',
             'img.required' => 'هذا الحقل مطلوب',
-            // 'img.*.max' => 'أقصى حجم لكل صورة 2M',
-            // 'img.*.uploaded' => 'أقصى حجم لكل صورة 2M',
             'category' => 'هذا الحقل مطلوب'
         ]);
         
-        $item_title = $request->item_title;
-        $item_desc = $request->item_desc;
-        $item_count = $request->item_count;
-        $item_price = $request->item_price;
-        $item_price_new = $request->item_price_new;
-        $item_price_real = $request->item_price_real;
-        $vendor_name = $request->vendor_name;
-        $code = $request->code;
-        $size = $request->size;
-        $source = $request->source;
-        $contents = $request->contents;
-        $brand = $request->brand;
-        $age = $request->age;
-        $country = $request->country;
-        $youtube = $request->youtube_link;
-
-        //custom youtube link
-        $pos = strpos($youtube,'?v=');
-        $pos += 3;
-        $youtube = substr($youtube, $pos);
+        
 
         $data = [
-            'price' => $request->item_price,
-            'new_price' => $request->item_price_new,
-            'real_price' => $request->item_price_real,
-            'count' => $request->item_count,
-            'vendor_name' => $request->vendor_name,
-            'code' => $code,
-            'age' => $age,
-            'youtube_link' => $youtube,
-
+            
+            'phone_number' => $request->item_phone,
+            'city_id' => $request->item_city,
             'ar' => [
-                'name' => $item_title,
-                'description' => $item_desc,
-                'size' => $size,
-                'source' => $source,
-                'contents' => $contents,
-                'country' => $country,
-                'brand' => $brand
+                'item_title_ar' => $request->item_title_ar,
+                'item_desc_ar' => $request->item_desc_ar,
+                'item_address_ar' => $request->item_address_ar
+            ],
+            'en' => [
+                'item_title_en' => $request->item_title_en,
+                'item_desc_en' => $request->item_desc_en,
+                'item_address_en' => $request->item_address_en
             ]
         ];
+
+        dd($data);
 
         $item = Item::create($data);
 
@@ -108,11 +94,6 @@ class ItemController extends Controller
             }
         } 
         
-        CategoryItem::insert( [
-            'category_id'=>  4,
-            'item_id'=> $item->id
-        ]);      
-
         if($request->file('img')){
             $path = 'images/items/'.$item->id.'/';
             if(!(\File::exists($path))){
@@ -136,7 +117,7 @@ class ItemController extends Controller
             }
         }
 
-        return redirect('/admin/items')->with('message','تم إضافة منتج جديد بنجاح');
+        return redirect('/admin/items')->with('message','تم إضافة مكان جديد بنجاح');
 
     }
     
@@ -144,28 +125,7 @@ class ItemController extends Controller
     public function show($id) {
         $category = Category::find($id);
         $items = $category->items;
-        //for categorized items 
-        if ($id != 4) {
-            return view('dashboard.item.item-cat',compact('items'));
-        } else {
-            $items_cat = CategoryItem::all();
-            $items_array = $items;
-            $i = 0;
-            foreach ($items_array as $item) {
-                $number_of_show = 0;
-                foreach($items_cat as $item_cat) {
-                    if ($item->id == $item_cat->item_id ) {
-                        $number_of_show++;
-                    }
-                    if ($number_of_show > 1) {
-                        unset($items[$i]);
-                        break;
-                    }
-                }
-                $i++;
-            }
-            return view('dashboard.item.item-cat',compact('items'));
-        }
+        return view('dashboard.item.item-cat',compact('items'));
     }
 
     // Go to edit item page
@@ -184,58 +144,42 @@ class ItemController extends Controller
         $item_id = $item->id;
         $item_categories = CategoryItem::where('item_id',$item_id)->delete();
         $request->validate([
-            'item_title' => 'required',
-            'item_desc' => 'required',
-            'item_count' => 'min:0',
-            'item_price' => 'min:0',
-            'item_price_new' => 'min:0',
-            'item_price_real' => 'min:0',
+            'item_title_ar' => 'required',
+            'item_title_en' => 'required',
+            'item_desc_ar' => 'required',
+            'item_desc_en' => 'required',
+            'item_address_ar' => 'required',
+            'item_address_en' => 'required',
+            'item_phone' => 'required',
+            'item_city' => 'required',
             'category' => 'required',
         ],
         [
-            'category_title.required' => 'هذا الحقل مطلوب',
-            'category.required' => 'هذا الحقل مطلوب',
+            'item_title_ar.required' => 'هذا الحقل مطلوب',
+            'item_title_en.required' => 'هذا الحقل مطلوب',
+            'item_desc_ar.required' => 'هذا الحقل مطلوب',
+            'item_desc_en.required' => 'هذا الحقل مطلوب',
+            'item_address_ar.required' => 'هذا الحقل مطلوب',
+            'item_address_en.required' => 'هذا الحقل مطلوب',
+            'item_phone.required' => 'هذا الحقل مطلوب',
+            'item_city.required' => 'هذا الحقل مطلوب',
+            'category' => 'هذا الحقل مطلوب'
         ]);
         
-        $item_title = $request->item_title;
-        $item_desc = $request->item_desc;
-        $item_count = $request->item_count;
-        $item_price = $request->item_price;
-        $item_price_new = $request->item_price_new;
-        $item_price_real = $request->item_price_real;
-        $vendor_name = $request->vendor_name;
-        $code = $request->code;
-        $size = $request->size;
-        $source = $request->source;
-        $contents = $request->contents;
-        $brand = $request->brand;
-        $age = $request->age;
-        $country = $request->country;
-        $youtube = $request->youtube_link;
-
-        //custom youtube link
-        $pos = strpos($youtube,'?v=');
-        $pos += 3;
-        $youtube = substr($youtube, $pos);
-
         $data = [
-            'price' => $item_price,
-            'new_price' => $item_price_new,
-            'real_price' => $item_price_real,
-            'count' => $item_count,
-            'vendor_name' => $vendor_name,
-            'code' => $code,
-            'age' => $age,
-            'youtube_link' => $youtube,
+            
+            'phone_number' => $request->item_phone,
+            'city_id' => $request->item_city,
 
             'ar' => [
-                'name' => $item_title,
-                'description' => $item_desc,
-                'size' => $size,
-                'source' => $source,
-                'contents' => $contents,
-                'country' => $country,
-                'brand' => $brand
+                'item_title_ar' => $request->item_title_ar,
+                'item_desc_ar' => $request->item_desc_ar,
+                'item_address_ar' => $request->item_address_ar
+            ],
+            'en' => [
+                'item_title_en' => $request->item_title_en,
+                'item_desc_en' => $request->item_desc_en,
+                'item_address_en' => $request->item_address_en
             ]
         ];
 
@@ -269,7 +213,7 @@ class ItemController extends Controller
             }
         }
 
-        return redirect()->back()->with('message','تم تعديل بيانات المنتج بنجاح');
+        return redirect()->back()->with('message','تم تعديل بيانات المكان بنجاح');
     }
 
     // Delete Sub image form item
@@ -285,7 +229,7 @@ class ItemController extends Controller
             $img->delete();
             return redirect()->back()->with('message','تم حذف الصورة بنجاح');
         } else {
-            return redirect()->back()->with('message','لايمكنك حذف الصورة، يجب أن يكون للمنتج صورة واحدة على الأقل');
+            return redirect()->back()->with('message','لايمكنك حذف الصورة، يجب أن يكون للمكان صورة واحدة على الأقل');
         }
     }
 
@@ -302,6 +246,6 @@ class ItemController extends Controller
             \File::deleteDirectory($path);
         }    
         $item->delete();
-        return redirect('/admin/items')->with('message','تم حذف المنتج بنجاح');
+        return redirect('/admin/items')->with('message','تم حذف بيانات المكان بنجاح');
     }
 }

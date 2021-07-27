@@ -2,6 +2,7 @@
 
 namespace App;
 use App\CityImage;
+use App\Item;
 
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,5 +18,9 @@ class City extends Model
 
     public function images(){
         return $this->hasMany('App\CityImage');
+    }
+
+    public function items(){
+        return $this->hasMany('App\Item');
     }
 }
