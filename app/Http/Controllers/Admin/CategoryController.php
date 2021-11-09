@@ -42,20 +42,23 @@ class CategoryController extends Controller
             $i = $last_cat->id + 1;
         }
         $request->validate([
-            'category_title' => 'required',
+            'category_title_ar' => 'required',
             'img' => 'required'
         ],
         [
-            'category_title.required' => 'هذا الحقل مطلوب',
+            'category_title_ar.required' => 'هذا الحقل مطلوب',
             'img.required' => 'هذا الحقل مطلوب',
             
         ]);
         
-        $category_title = $request->category_title;
+        $category_title_ar = $request->category_title_ar;
+        $category_title_en = $request->category_title_en;
+
         $data = [
             'ar' => [
-                'name' => $category_title,
-            ]
+                'name' => $category_title_ar,
+            ],
+            'en' => ['name' => $category_title_en]
         ];
         
         if($request->file('img')){
@@ -94,17 +97,18 @@ class CategoryController extends Controller
         $category = Category::where('id',$id)->first();
 
         $request->validate([
-            'category_title' => 'required',
+            'category_title_ar' => 'required',
         ],
         [
-            'category_title.required' => 'هذا الحقل مطلوب',
+            'category_title_ar.required' => 'هذا الحقل مطلوب',
         ]);
         
-        $category_title = $request->category_title;
+        $category_title_ar = $request->category_title_ar;
         $data = [
             'ar' => [
-                'name' => $category_title,
-            ]
+                'name' => $category_title_ar,
+            ],
+            'en' => ['name' => $category_title_en]
         ];
 
         if($request->file('img')){

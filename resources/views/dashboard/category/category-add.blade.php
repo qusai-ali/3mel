@@ -12,14 +12,23 @@
                     <form class="form-group col-12" method="POST" enctype="multipart/form-data" action="{{ route('admin.category.store') }}">
 
                 @csrf
-                <div class="group">
-                    <label>اسم التصنيف: <span class="require">*</span></label>
-                    <input type="text" name="category_title" required>
-                    @if ($errors->has('category_title'))
-                    <span class="text-danger">{{ $errors->first('category_title') }}</span>
+                <div class="group two">
+                    <label> اسم التصنيف (اللغة العربية) <span class="require">*</span></label>
+                    <input type="text" name="category_title_ar" required>
+                    @if ($errors->has('category_title_ar'))
+                    <span class="text-danger">{{ $errors->first('category_title_ar') }}</span>
                     @endif
                 </div>
+                <div class="group two">
+                    <label>اسم التصنيف (اللغة الانكليزية) <span class="require">*</span></label>
+                    <input type="text" name="category_title_en" required>
+                    @if ($errors->has('category_title_en'))
+                    <span class="text-danger">{{ $errors->first('category_title_en') }}</span>
+                    @endif
+                </div>
+                <div class="clear"></div>
                 <div class="group">
+
                     <label>صورة التصنيف: <span class="require">*</span></label>
                     <input type="file" name="img" accept="image/*" id="image" required>
                     @if ($errors->has('img'))

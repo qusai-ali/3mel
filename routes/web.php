@@ -71,12 +71,7 @@ Route::namespace("Admin")->prefix('admin')->group(function(){
     Route::delete('/city/delete/{id}','CityController@destroy');
     Route::get('/city/edit/{id}','CityController@edit');
     Route::post('/city/update/{id}','CityController@update')->name('admin.city.update');
-<<<<<<< Updated upstream
-=======
     Route::delete('/city/img/delete/{id}','CityController@imagedelete');
-
->>>>>>> Stashed changes
-
 
 
 
@@ -95,4 +90,14 @@ Route::namespace("Admin")->prefix('admin')->group(function(){
 Auth::routes();
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
+Route::group(['middeleware'=>['auth','isVendor']],function (){
+Route::get('/dashboard',function (){
+    return view('vendor.dashboard');
+});
+});
 
+Route::group(['middeleware'=>['auth','isUser']],function (){
+    Route::get('/dashboard',function (){
+        return view('users.dashboard');
+    });
+    });

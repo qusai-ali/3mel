@@ -13,10 +13,17 @@
          <form class="form-group col-12" method="POST" enctype="multipart/form-data" action="{{ url('admin/category/update/'.$category->id) }}">
                 @csrf
                 <div class="group">
-                    <label>اسم التصنيف: <span class="require">*</span></label>
-                    <input type="text" name="category_title" value="{{ $category->translate('ar')->name }}" required>
-                    @if ($errors->has('category_title'))
-                    <span class="text-danger">{{ $errors->first('category_title') }}</span>
+                    <label>اسم التصنيف (اللغة العربية) <span class="require">*</span></label>
+                    <input type="text" name="category_title_ar" value="{{ $category->translate('ar')->name }}" required>
+                    @if ($errors->has('category_title_ar'))
+                    <span class="text-danger">{{ $errors->first('category_title_ar') }}</span>
+                    @endif
+                </div>
+                <div class="group">
+                    <label>اسم التصنيف (اللغة الانكليزية) <span class="require">*</span></label>
+                    <input type="text" name="category_title_en" value="{{ $category->translate('en')->name }}" required>
+                    @if ($errors->has('category_title_en'))
+                    <span class="text-danger">{{ $errors->first('category_title_en') }}</span>
                     @endif
                 </div>
                 <div class="group">
